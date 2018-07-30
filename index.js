@@ -454,15 +454,14 @@ class HtmlWebpackPlugin {
 
       // Webpack outputs an array for each chunk when using sourcemaps
       // or when one chunk hosts js and css simultaneously
-      // const js = chunkFiles.find(chunkFile => /.js($|\?)/.test(chunkFile));
-      // if (js) {
-			// This conflicts with the style karma-webpack names her assets.
-      const js = chunkFiles[0];
-			assets.chunks[chunkName].size = chunk.size;
-      assets.chunks[chunkName].entry = js;
-      assets.chunks[chunkName].hash = chunk.hash;
-      assets.js.push(js);
-      // }
+      // find the first non css asset
+      const js = chunkFiles.find(chunkFile => !/.css($|\?)/.test(chunkFile));
+      if (js) {
+        assets.chunks[chunkName].size = chunk.size;
+        assets.chunks[chunkName].entry = js;
+        assets.chunks[chunkName].hash = chunk.hash;
+        assets.js.push(js);
+      }
 
       // Gather all css files
       const css = chunkFiles.filter(chunkFile => /.css($|\?)/.test(chunkFile));
